@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-user-registration/firebase.js"></script>
 </head>
 <body>
     <h1>Login</h1>
@@ -16,5 +20,34 @@
     </form>
     <p>Ainda não tem uma conta? <a href="register.html">Registre aqui</a></p>
     <p><a href="forgot_password.html">Esqueceu a senha?</a></p>
+    <script>
+
+        // Inicialize o app Firebase
+        firebase.initializeApp(firebaseConfig);
+        // Inicialize o Firebase Auth
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            // Tenta fazer login com o email e senha
+            // Verifica se o email e a senha estão preenchidos
+            if (email === '' || password === '') {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Login bem-sucedido
+                    alert('Login bem-sucedido!');
+                    window.location.href = 'home.html';     // Redireciona para a página inicial
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert('Erro: ' + errorMessage);
+                });
+        });
+    </script>
+        
 </body>
 </html>

@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-user-registration\firebase.js"></script> 
 </head>
 <body>
     <h1>Registro</h1>
-    <form action="register.php" method="post">
+    <form id="registerForm">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        
         <label for="email">Email:</label>
         <input type="text" id="email" name="email" required><br><br>
 
@@ -18,20 +25,52 @@
         <input type="password" id="confirm_password" name="confirm_password" required><br><br>
         
         <h1>Acessibilidade:</h1>
-        <label>Acessibilidade:</label><br>
-        <input type="checkbox" id="screen_reader" name="accessibility[]" value="screen_reader">
-        <label for="screen_reader">Leitor de Tela</label><br>
-
-        <input type="checkbox" id="keyboard_navigation" name="accessibility[]" value="keyboard_navigation">
-        <label for="keyboard_navigation">Navegação por Teclado</label><br>
-
-        <input type="checkbox" id="high_contrast" name="accessibility[]" value="high_contrast">
-        <label for="high_contrast">Alto Contraste</label><br>
-
-        <input type="checkbox" id="none" name="accessibility[]" value="none">
-        <label for="none">Nenhuma</label><br><br>
+        <label><input type="checkbox" name="accessibility" value="alto-contraste"> Alto Contraste</label><br>
+        <label><input type="checkbox" name="accessibility" value="leitor-tela"> Leitor de Tela</label><br>
+        <label><input type="checkbox" name="accessibility" value="legenda"> Legenda</label><br><br>
 
         <input type="submit" value="Registrar">
     </form>
+
+    <script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+
+        // Pega todos os checkboxes marcados
+        const accessibility = Array.from(document.querySelectorAll('input[name="accessibility"]:checked')).map(cb => cb.value);
+
+        // Lista de favoritos começa vazia
+        const favorites = [];
+
+        if (password !== confirmPassword) {
+            alert('As senhas não coincidem!');
+            return;
+        }
+
+        // Verifica se o email já está registrado
+        firebase.auth().fetchSignInMethodsForEmail(email).then(function(signInMethods) {
+            if (signInMethods.length > 0) {
+                alert('Este email já está registrado. Tente outro.');
+            } else {
+                // O email não está registrado, continua o registro
+                registerUser(email, password, accessibility, favorites)
+                    .then(() => {
+                        alert('Usuário registrado com sucesso!');
+                        window.location.href = 'login.html';
+                    })
+                    .catch((error) => {
+                        alert('Falha no registro. Tente novamente.\n' + error.message);
+                    });
+            }
+        }).catch(function(error) {
+            console.error('Erro ao verificar o email:', error);
+            alert('Erro ao verificar o email: ' + error.message);
+        });
+    });
+    </script>
 </body>
 </html>
