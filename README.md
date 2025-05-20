@@ -40,7 +40,3 @@ Login-Acessivel
 ## Contribuição
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir um pull request ou relatar problemas.
-
-## Licença
-
-Este projeto está licenciado sob a MIT License. Veja o arquivo LICENSE para mais detalhes.
