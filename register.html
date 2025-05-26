@@ -35,10 +35,11 @@
     <script>
     document.getElementById('registerForm').addEventListener('submit', function(e) {
         e.preventDefault();
-
+        // Pega os valores dos campos do formulário
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm_password').value;
+        const name = document.getElementById('name').value;
 
         // Pega todos os checkboxes marcados
         const accessibility = Array.from(document.querySelectorAll('input[name="accessibility"]:checked')).map(cb => cb.value);
@@ -57,7 +58,7 @@
                 alert('Este email já está registrado. Tente outro.');
             } else {
                 // O email não está registrado, continua o registro
-                registerUser(email, password, accessibility, favorites)
+                registerUser(name, email, password, accessibility, favorites)
                     .then(() => {
                         alert('Usuário registrado com sucesso!');
                         window.location.href = 'login.html';
